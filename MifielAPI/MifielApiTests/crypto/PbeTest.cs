@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using MifielAPI.Crypto;
-using Newtonsoft.Json;
-using System.IO;
 using System.Text;
 using MifielAPI.Exceptions;
 using MifielAPITests.crypto;
@@ -26,7 +23,6 @@ namespace MifielAPITests
             {
                 byte[] salt = Encoding.ASCII.GetBytes(item.salt);
                 byte[] res = Pbe.DerivedKeySHA256(item.key, salt, item.keylen, item.iterations);
-                System.Console.WriteLine(item.result);
                 Assert.AreEqual(item.result, BitConverter.ToString(res).Replace("-", "").ToLower());
             }
         }

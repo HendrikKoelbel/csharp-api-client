@@ -12,9 +12,7 @@ namespace MifielAPI.Crypto
         public const int PASSWORD_LENGTH = 32;
         public const int SALT_SIZE = 16;
         public const int ITERATIONS = 1000;
-        public const string ALGORITHM = "PBKDF2WithHmacSHA256";
         public const string CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_+=#&.*";
-
 
         public static string RandomPassword(int len = PASSWORD_LENGTH)
         {
@@ -50,9 +48,6 @@ namespace MifielAPI.Crypto
                          iterations);
             var key = (KeyParameter)pdb.GenerateDerivedMacParameters(size * 8);
             return key.GetKey();
-
         }
     }
-
-
 }

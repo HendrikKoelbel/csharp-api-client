@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using MifielAPI.Crypto;
-using Newtonsoft.Json;
-using System.IO;
 using System.Text;
 using MifielAPI.Exceptions;
 using MifielAPITests.crypto;
@@ -32,7 +29,6 @@ namespace MifielAPITests
              }
         }
 
-
         [Test]
         public void Aes_Decrypt_Test()
         {
@@ -53,6 +49,7 @@ namespace MifielAPITests
             Assert.Throws<MifielException>(() => Aes.Encrypt(null, Aes.GetIV(), Aes.GetIV()));
             Assert.Throws<MifielException>(() => Aes.Encrypt(new byte[400], Aes.GetIV(), Aes.GetIV()));
         }
+
         [Test]
         public void Aes_Decrypt_BadKey()
         {
@@ -60,18 +57,21 @@ namespace MifielAPITests
             Assert.Throws<MifielException>(() => Aes.Decrypt(null, Aes.GetIV(), Aes.GetIV()));
             Assert.Throws<MifielException>(() => Aes.Decrypt(new byte[400], Aes.GetIV(), Aes.GetIV()));
         }
+
         [Test]
         public void Aes_Encrypt_BadData()
         {
             Assert.Throws<MifielException>(() => Aes.Encrypt(Aes.GetIV(), Encoding.ASCII.GetBytes("") ,Aes.GetIV()));
             Assert.Throws<MifielException>(() => Aes.Encrypt(Aes.GetIV(), null, Aes.GetIV()));
         }
+
         [Test]
         public void Aes_Decrypt_BadData()
         {
             Assert.Throws<MifielException>(() => Aes.Decrypt(Aes.GetIV(), Encoding.ASCII.GetBytes(""), Aes.GetIV()));
             Assert.Throws<MifielException>(() => Aes.Decrypt(Aes.GetIV(), null, Aes.GetIV()));
         }
+
         [Test]
         public void Aes_Encrypt_BadIV()
         {
@@ -79,6 +79,7 @@ namespace MifielAPITests
             Assert.Throws<MifielException>(() => Aes.Encrypt(Aes.GetIV(), Aes.GetIV(), Encoding.ASCII.GetBytes("")));
             Assert.Throws<MifielException>(() => Aes.Encrypt(Aes.GetIV(), Aes.GetIV(), null));
         }
+
         [Test]
         public void Aes_Decrypt_BadIV()
         {
@@ -86,6 +87,7 @@ namespace MifielAPITests
             Assert.Throws<MifielException>(() => Aes.Decrypt(Aes.GetIV(), Aes.GetIV(), Encoding.ASCII.GetBytes("")));
             Assert.Throws<MifielException>(() => Aes.Decrypt(Aes.GetIV(), Aes.GetIV(), null));
         }
+
         [Test]
         public void Aes_IV()
         {
@@ -93,8 +95,8 @@ namespace MifielAPITests
             byte[] iv = Aes.GetIV();
             Assert.AreEqual(len, iv.Length);
         }
-
     }
+
     public class ItemAes
     {
         public string key;
