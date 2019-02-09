@@ -41,19 +41,25 @@
   <ItemGroup>
     <Compile Include="crypto\AesTest.cs" />
     <Compile Include="crypto\CryptoTest.cs" />
+    <None Include="crypto\fixtureECIES.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Compile Include="crypto\EciesTest.cs" />
     <Compile Include="crypto\PbeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DocumentsTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="crypto\fixtureECIES.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="test-pdf.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="crypto/*.json">
+    <None Include="crypto\fixtureAes.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="crypto\fixturePbe.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

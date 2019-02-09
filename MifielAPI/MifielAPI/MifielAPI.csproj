@@ -67,6 +67,8 @@ Through Mifiel’s API, you can easily manage documents and certificates within 
   <ItemGroup>
     <Compile Include="ApiClient.cs" />
     <Compile Include="Crypto\Aes.cs" />
+    <Compile Include="Crypto\Ecies.cs" />
+    <Compile Include="Crypto\IesEnginee.cs" />
     <Compile Include="Crypto\Pbe.cs" />
     <Compile Include="Dao\BaseObjectDAO.cs" />
     <Compile Include="Dao\Certificates.cs" />

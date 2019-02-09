@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace MifielAPI.Crypto
 {
@@ -11,7 +10,7 @@ namespace MifielAPI.Crypto
         public const int IV_SIZE = 16;
 
         public static byte[] Decrypt(byte[] key, byte[] dataEncrypt, byte[] iv) 
-        {
+        {   
             if (key == null || !(key.Length == 16 || key.Length == 24 || key.Length == 32))
                 throw new MifielException("La clave especificada no tiene un tamaño válido para este algoritmo");
 
