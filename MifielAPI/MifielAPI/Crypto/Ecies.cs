@@ -24,6 +24,7 @@ namespace MifielAPI.Crypto
         private readonly IesParameters iesParameters;
         private readonly int IV_LENGTH = 16;
         private readonly IBasicAgreement agree;
+
         public Ecies()
         {
             curve = SecNamedCurves.GetByName("secp256k1");
@@ -59,7 +60,7 @@ namespace MifielAPI.Crypto
 		    return engine.ProcessBlock(plaintext, 0, plaintext.Length);
 	    }
 
-    public class Kdf : IDerivationFunction
+        public class Kdf : IDerivationFunction
         {
             private IDigest digest;
             private byte[] shared;

@@ -9,11 +9,6 @@
     using System;
     using System.IO;
 
-    /**
-    * support class for constructing intergrated encryption ciphers
-    * for doing basic message exchanges on top of key agreement ciphers
-    */
-
     public class IesEnginee
     {
 
@@ -29,8 +24,6 @@
         private ECPrivateKeyParameters privParam;
         private ECPublicKeyParameters pubParam;
        
-
-
         public IesEnginee(
             IBasicAgreement agree,
             IDerivationFunction kdf,
@@ -72,9 +65,7 @@
         {
             if (forEncryption)
             {
-                ECKeyPairGenerator generator = new ECKeyPairGenerator();
-                generator.Init(new ECKeyGenerationParameters(pubParam.Parameters, new SecureRandom()));
-                AsymmetricCipherKeyPair pair = generator.GenerateKeyPair();
+                AsymmetricCipherKeyPair pair = GenerateEphemeralKey(pubParam.Parameters);
                 this.privParam = (ECPrivateKeyParameters)pair.Private;
                 this.ephemeralKey = ((ECPublicKeyParameters) pair.Public).Q.GetEncoded(false);
             }
@@ -102,18 +93,14 @@
             byte[] M = null;
 
             if (inLen < ephemeralKey.Length + mac.GetMacSize())
-            {
                 throw new MifielException("Length of input must be greater than the MAC and V combined");
-            }
 
             KeyParameter macKey = null;
             KdfParameters kParam = new KdfParameters(z, param.GetDerivationV());
             int macKeySize = param.MacKeySize;
 
-            if (cipher == null)     // stream mode
-            {
+            if (cipher == null)
                 throw new MifielException("Se espera el cipher block");
-            }
 
 
             int cipherKeySize = ((IesWithCipherParameters)param).CipherKeySize;
@@ -123,10 +110,10 @@
 
             if (IV != null)
                 cp = new ParametersWithIV(cp, IV);
+
             cipher.Init(false,cp);
 
             macKey = new KeyParameter(Buffer, (cipherKeySize / 8), (macKeySize / 8));
-
 
             mac.Init(macKey);
 
@@ -143,7 +130,7 @@
             {
                 if (macBuf[t] != in_enc[inOff + inLen - macKeySize/8 + t])
                 {
-                    throw (new InvalidCipherTextException("IMac codes failed to equal."));
+                    throw (new MifielException("IMac codes failed to equal."));
                 }
             }
 
@@ -173,19 +160,14 @@
             else
                 cipher.Init(true, keyParameter);
 
-
-
             c_text_length = cipher.GetOutputSize(inLen);
 
             byte[] encrypt = new byte[c_text_length];
-
             int len = cipher.ProcessBytes(input, inOff, inLen, encrypt, 0);
             len += cipher.DoFinal(encrypt, len);
 
             byte[] computedMAC = new byte[mac.GetMacSize()];
-
             macKey = new KeyParameter(Buffer, (cipherKeySize / 8), (macKeySize / 8));
-
             mac.Init(macKey);
 
             if (IV != null)
@@ -198,7 +180,6 @@
             mac.DoFinal(computedMAC, 0);
 
             Output = new byte[IV.Length + ephemeralKey.Length + len + computedMAC.Length];
-
             
             Array.Copy(IV, 0, Output, 0, IV.Length);
             Array.Copy(ephemeralKey, 0, Output, IV.Length, ephemeralKey.Length);
@@ -211,10 +192,8 @@
         private byte[] GenerateKdfBytes(KdfParameters kParam, int length)
         {
             byte[] buf = new byte[length];
-
             kdf.Init(kParam);
             kdf.GenerateBytes(buf, 0, buf.Length);
-
             return buf;
         }
 

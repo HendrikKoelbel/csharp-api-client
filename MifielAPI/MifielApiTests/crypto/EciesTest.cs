@@ -1,6 +1,7 @@
-﻿using System;
+﻿using System.IO;
 using System.Text;
 using MifielAPI.Crypto;
+using MifielAPI.Exceptions;
 using MifielAPITests.crypto;
 using NUnit.Framework;
 
@@ -10,7 +11,6 @@ namespace MifielAPITests
     public class EciesTest : CryptoTest<ItemEcies>
     {
         private static readonly string fixturePath = "crypto\\fixtureECIES.json";
-
 
         public EciesTest() : base(fixturePath)
         {
@@ -44,12 +44,38 @@ namespace MifielAPITests
             Ecies ecies = new Ecies();
             encrypt = ecies.Encrypt(publicKey, Encoding.ASCII.GetBytes(test));
             res = ecies.Decrypt(privateKey, encrypt);
-            //            Console.WriteLine(" youp " + BitConverter.ToString(encrypt).Replace("-", "").ToLower());
-            //            Console.WriteLine("res" + Encoding.Default.GetString(res));
 
             Assert.AreEqual(test, Encoding.Default.GetString(res));
         }
 
+        [Test]
+        public void Ecies_Error_Encrypt_Test()
+        {
+            byte[] publicKey = StringToByteArray("");
+            string test = "Texto de prueba para cifrado";
+            Ecies ecies = new Ecies();
+            Assert.Throws<IOException>(() => ecies.Encrypt(publicKey, Encoding.ASCII.GetBytes(test)));
+        }
+
+        [Test]
+        public void Ecies_Eror_IV_Dencrypt_Test()
+        {
+            byte[] privateKey = StringToByteArray(ArrayTest[4].privateKey);
+            byte[] data = StringToByteArray(ArrayTest[4].iv + ArrayTest[4].ephemPublicKey + ArrayTest[4].ciphertext + ArrayTest[4].mac);
+            string decrypted = ArrayTest[4].decrypted;
+            Ecies ecies = new Ecies();
+            Assert.Throws<MifielException>(() => ecies.Decrypt(privateKey, data));
+        }
+        [Test]
+        public void Ecies_Error__Private_Dencrypt_Test()
+        {
+            byte[] publicKey = StringToByteArray(ArrayTest[5].publicKey);
+            byte[] privateKey = StringToByteArray(ArrayTest[5].privateKey);
+            byte[] data = StringToByteArray(ArrayTest[5].iv + ArrayTest[5].ephemPublicKey + ArrayTest[5].ciphertext + ArrayTest[5].mac);
+            string decrypted = ArrayTest[5].decrypted;
+            Ecies ecies = new Ecies();
+            Assert.Throws<MifielException>(() => ecies.Decrypt(privateKey, data));
+        }
     }
     public class ItemEcies
     {
