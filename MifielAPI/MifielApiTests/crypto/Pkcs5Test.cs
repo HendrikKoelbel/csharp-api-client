@@ -58,6 +58,7 @@ namespace MifielAPITests
         public string pkcs5;
         public string iv;
         public string salt;
+        public string password;
         public int iterations;
         public int sizeKey;
         public string encrypted;

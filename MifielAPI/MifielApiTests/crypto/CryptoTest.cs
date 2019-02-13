@@ -12,7 +12,7 @@ namespace MifielAPITests.crypto
     public class CryptoTest<T>
     {
         protected List<T> ArrayTest { get; }
-        private readonly string _currentDirectory = Path.GetFullPath(TestContext.CurrentContext.WorkDirectory);
+        public static readonly string _currentDirectory = Path.GetFullPath(TestContext.CurrentContext.WorkDirectory);
 
         public CryptoTest(string fixturePath)
         {

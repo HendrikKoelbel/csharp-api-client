@@ -80,7 +80,6 @@
         public void Read(byte[] pkcs5Bytes)
         {
             EncryptedPrivateKeyInfo encPkInfo = null;
-            Console.WriteLine(pkcs5Bytes.Length);
             try
             {
                 encPkInfo = EncryptedPrivateKeyInfo.GetInstance(Asn1Sequence.GetInstance(pkcs5Bytes));

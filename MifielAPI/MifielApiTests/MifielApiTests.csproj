@@ -44,6 +44,7 @@
     <None Include="crypto\fixtureECIES.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="crypto\DocumentE2eeTest.cs" />
     <Compile Include="crypto\EciesTest.cs" />
     <Compile Include="crypto\PbeTest.cs" />
     <Compile Include="crypto\Pkcs5Test.cs" />
@@ -56,6 +57,9 @@
     </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="test-e2ee.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="test-pdf.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
