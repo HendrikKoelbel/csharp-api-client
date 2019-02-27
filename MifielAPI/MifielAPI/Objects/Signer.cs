@@ -24,5 +24,7 @@ namespace MifielAPI.Objects
         public string Fos { get; set; }
         [JsonProperty("pos")]
         public string Pos { get; set; }
+        [JsonProperty("e2ee")]
+        public E2e E2e { get; set; }
     }
 }

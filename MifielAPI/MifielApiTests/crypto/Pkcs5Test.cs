@@ -3,6 +3,7 @@ using NUnit.Framework;
 using MifielAPI.Crypto;
 using MifielAPITests.crypto;
 using MifielAPI.Exceptions;
+using MifielAPI.Utils;
 
 namespace MifielAPITests
 {
@@ -21,7 +22,7 @@ namespace MifielAPITests
             foreach (ItemPkcs5 item in ArrayTest.GetRange(0, 3))
             {
                 Pkcs5 pkcs5 = new Pkcs5();
-                pkcs5.Read(StringToByteArray(item.pkcs5));
+                pkcs5.Read(MifielUtils.StringToByteArray(item.pkcs5));
                 Assert.AreEqual(item.salt, BitConverter.ToString(pkcs5.Salt).Replace("-", "").ToLower());
                 Assert.AreEqual(item.iterations, pkcs5.Iterations);
                 Assert.AreEqual(item.iv, BitConverter.ToString(pkcs5.Iv).Replace("-", "").ToLower());
@@ -35,7 +36,7 @@ namespace MifielAPITests
         {
             foreach (ItemPkcs5 item in ArrayTest.GetRange(0, 3))
             {
-                Pkcs5 pkcs5 = new Pkcs5(StringToByteArray(item.salt), StringToByteArray(item.iv), StringToByteArray(item.encrypted), item.iterations, item.sizeKey);
+                Pkcs5 pkcs5 = new Pkcs5(MifielUtils.StringToByteArray(item.salt), MifielUtils.StringToByteArray(item.iv), MifielUtils.StringToByteArray(item.encrypted), item.iterations, item.sizeKey);
                 byte[] res = pkcs5.Create();
                 Console.WriteLine(item.pkcs5);
                 Assert.AreEqual(item.pkcs5, BitConverter.ToString(res).Replace("-", "").ToLower());
@@ -45,9 +46,9 @@ namespace MifielAPITests
         public void PKCS5_Exception()
         {
                 Pkcs5 pkcs5 = new Pkcs5();
-                Assert.Throws<MifielException>(() => pkcs5.Read(StringToByteArray(ArrayTest[3].pkcs5)));
-                Assert.Throws<MifielException>(() => pkcs5.Read(StringToByteArray(ArrayTest[4].pkcs5)));
-                Assert.Throws<MifielException>(() => pkcs5.Read(StringToByteArray(ArrayTest[5].pkcs5)));
+                Assert.Throws<MifielException>(() => pkcs5.Read(MifielUtils.StringToByteArray(ArrayTest[3].pkcs5)));
+                Assert.Throws<MifielException>(() => pkcs5.Read(MifielUtils.StringToByteArray(ArrayTest[4].pkcs5)));
+                Assert.Throws<MifielException>(() => pkcs5.Read(MifielUtils.StringToByteArray(ArrayTest[5].pkcs5)));
         }
 
 

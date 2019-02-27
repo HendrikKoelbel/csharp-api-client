@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MifielAPI.Crypto;
+using MifielAPI.Utils;
 using MifielAPITests.crypto;
 using NUnit.Framework;
 
@@ -60,10 +61,11 @@ namespace MifielAPITests
             foreach (ItemPkcs5 item in ArrayTest.GetRange(0, 3))
             {
                 DocumentE2ee documentE2Ee = new DocumentE2ee();
-                documentE2Ee.Pkcs5Bytes = StringToByteArray(item.pkcs5);
+                documentE2Ee.Pkcs5Bytes = MifielUtils.StringToByteArray(item.pkcs5);
                 byte[] res = documentE2Ee.DecryptDocument(item.password);
                 Assert.AreEqual(Decrypted, Encoding.Default.GetString(res));
             }
         }
+
     }
 }

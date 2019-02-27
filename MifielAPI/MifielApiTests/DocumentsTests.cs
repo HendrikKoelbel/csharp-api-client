@@ -19,8 +19,11 @@ namespace MifielApiTests
         [SetUp]
         public void SetUp()
         {
-            string appId = "bf8a81b18bffbacf70aa4ac9d5e496a2b7e0e6dd";
-            string appSecret = "hBVLKRTyat56vHcNPVsrSm4ItzmSuMBCrJybLUsX7iH4FWxXg6P2c0g3mdl1SYpeGysHJe2vZDN/RM1nw9tXiw==";
+            //string appId = "bf8a81b18bffbacf70aa4ac9d5e496a2b7e0e6dd";
+            //string appSecret = "hBVLKRTyat56vHcNPVsrSm4ItzmSuMBCrJybLUsX7iH4FWxXg6P2c0g3mdl1SYpeGysHJe2vZDN/RM1nw9tXiw==";
+
+            string appId = "ff197dd300a03b81795154af9a91dc93eea7f38d";
+            string appSecret = "XJ2sXyDjNsnFFNMq6LWlAc3dUtU5Nq9LCB+7DuX7otfIVWEVsO8ATn916CzRxfOh36nD5ZqQKWVUZ1/Ik7Ik/Q==";
 
             _pdfFilePath = Path.Combine(_currentDirectory, "test-pdf.pdf");
             _apiClient = new ApiClient(appId, appSecret);
@@ -166,7 +169,9 @@ namespace MifielApiTests
 
         private void SetSandboxUrl()
         {
-            _apiClient.Url = "https://sandbox.mifiel.com";
+            _apiClient.Url = "http://192.168.1.70:3000";
+        //    http://192.168.1.70:3000/es
+        
         }
     }
 }

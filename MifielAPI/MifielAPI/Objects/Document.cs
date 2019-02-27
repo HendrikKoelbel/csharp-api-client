@@ -40,5 +40,8 @@ namespace MifielAPI.Objects
         public List<Signer> Signers { get; set; }
         [JsonProperty("manual_close")]
         public Boolean? ManualClose { get; set; }
+        [JsonProperty("encrypted")]
+        public bool Encrypted { get; set; }
+
     }
 }

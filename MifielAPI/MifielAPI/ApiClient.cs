@@ -3,6 +3,7 @@ using MifielAPI.Utils;
 using System;
 using System.Net.Http;
 using System.Globalization;
+using NBitcoin;
 
 namespace MifielAPI
 {
@@ -13,6 +14,7 @@ namespace MifielAPI
         private string _apiVersion = "/api/v1/";
         private CultureInfo _usCulture = new CultureInfo("en-US");
         private string url;
+        
 
         public string Url
         {
@@ -27,6 +29,8 @@ namespace MifielAPI
             }
         }
 
+        public ExtKey MasterKey { get; set; }
+
         public ApiClient(string appId, string appSecret)
         {
             AppId = appId;
@@ -34,6 +38,15 @@ namespace MifielAPI
             Url = "https://www.mifiel.com";
         }
 
+        public void SetMasterFromSeed(string seedHex)
+        {
+            MasterKey = new ExtKey(seedHex);
+        }
+
+        public void SetMasterFromWif(string wif)
+        {
+            MasterKey = ExtKey.Parse(wif);
+        }
         public HttpContent Get(string path)
         {
             return SendRequest(Rest.HttpMethod.GET, path, new StringContent(""));

@@ -4,6 +4,7 @@ using MifielAPI.Crypto;
 using System.Text;
 using MifielAPI.Exceptions;
 using MifielAPITests.crypto;
+using MifielAPI.Utils;
 
 namespace MifielAPITests
 {
@@ -35,7 +36,7 @@ namespace MifielAPITests
             foreach (ItemAes item in ArrayTest.GetRange(0, 9))
             {
                 byte[] key = Encoding.ASCII.GetBytes(item.key);
-                byte[] data = StringToByteArray(item.encrypted);
+                byte[] data = MifielUtils.StringToByteArray(item.encrypted);
                 byte[] iv = Encoding.ASCII.GetBytes(item.iv);
                 byte[] res = Aes.Decrypt(key, data, iv);
                 Assert.AreEqual(item.dataToEncrypt, Encoding.Default.GetString(res));

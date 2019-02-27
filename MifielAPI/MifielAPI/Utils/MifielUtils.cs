@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using MifielAPI.Objects;
+using System.Net.Http.Headers;
 
 namespace MifielAPI.Utils
 {
@@ -125,5 +127,103 @@ namespace MifielAPI.Utils
                 throw new MifielException("Error converting Object to JSON", e);
             }
         }
+
+
+        public static byte[] StringToByteArray(String hex)
+        {
+            int NumberChars = hex.Length;
+            byte[] bytes = new byte[NumberChars / 2];
+            for (int i = 0; i < NumberChars; i += 2)
+                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+            return bytes;
+        }
+
+
+        public static HttpContent BuildHttpBody(Document document, byte[] pkcs5 = null)
+        {
+            List<Signature> signatures = document.Signatures;
+            string filePath = document.File;
+            string fileName = document.FileName;
+            string originalHash = document.OriginalHash;
+
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                MultipartFormDataContent multipartContent = new MultipartFormDataContent();
+
+                var parameters = new List<KeyValuePair<string, string>>();
+
+                if (document.Encrypted)
+                {
+                    ByteArrayContent pdfContent = new ByteArrayContent(pkcs5);
+                    pdfContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/pdf");
+                    multipartContent.Add(pdfContent, "file", Path.GetFileName(filePath) + ".enc");
+                    document.OriginalHash = MifielAPI.Utils.MifielUtils.GetDocumentHash(filePath);
+                    parameters.Add(new KeyValuePair<string, string>("original_hash", document.OriginalHash));
+                } else
+                {
+                    ByteArrayContent pdfContent = new ByteArrayContent(File.ReadAllBytes(filePath));
+                    pdfContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/pdf");
+                    multipartContent.Add(pdfContent, "file", Path.GetFileName(filePath));
+                }
+
+                
+
+                if (!String.IsNullOrEmpty(document.CallbackUrl))
+                {
+                    parameters.Add(new KeyValuePair<string, string>("callback_url", document.CallbackUrl));
+                }
+
+
+                parameters.Add(new KeyValuePair<string, string>("manual_close", document.ManualClose.ToString().ToLower()));
+                parameters.Add(new KeyValuePair<string, string>("encrypted", document.Encrypted.ToString().ToLower()));
+
+                if (signatures != null)
+                {
+                    for (int i = 0; i < signatures.Count; i++)
+                    {
+                        parameters.Add(new KeyValuePair<string, string>("signatories[" + i + "][name]", signatures[i].SignerName));
+                        parameters.Add(new KeyValuePair<string, string>("signatories[" + i + "][email]", signatures[i].Email));
+                        parameters.Add(new KeyValuePair<string, string>("signatories[" + i + "][tax_id]", signatures[i].TaxId));
+                    }
+                }
+
+
+                foreach (var keyValuePair in parameters)
+                {
+                    multipartContent.Add(new StringContent(keyValuePair.Value),
+                        String.Format("\"{0}\"", keyValuePair.Key));
+                }
+
+                return multipartContent;
+            }
+            if (!string.IsNullOrEmpty(originalHash)
+                && !string.IsNullOrEmpty(fileName))
+            {
+                Dictionary<string, string> parameters = new Dictionary<string, string>();
+                parameters.Add("encripted", false.ToString());
+                parameters.Add("original_hash", originalHash);
+                parameters.Add("name", fileName);
+                parameters.Add("manual_close", document.ManualClose.ToString().ToLower());
+
+                MifielUtils.AppendTextParamToContent(parameters, "callback_url", document.CallbackUrl);
+
+                if (signatures != null)
+                {
+                    for (int i = 0; i < signatures.Count; i++)
+                    {
+                        MifielUtils.AppendTextParamToContent(parameters,
+                            "signatories[" + i + "][name]", signatures[i].SignerName);
+                        MifielUtils.AppendTextParamToContent(parameters,
+                            "signatories[" + i + "][email]", signatures[i].Email);
+                        MifielUtils.AppendTextParamToContent(parameters,
+                            "signatories[" + i + "][tax_id]", signatures[i].TaxId);
+                    }
+                }
+
+                return new FormUrlEncodedContent(parameters);
+            }
+            throw new MifielException("You must provide file or original hash and file name");
+        }
+
     }
 }
