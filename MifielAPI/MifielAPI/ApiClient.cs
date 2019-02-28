@@ -43,9 +43,9 @@ namespace MifielAPI
             MasterKey = new ExtKey(seedHex);
         }
 
-        public void SetMasterFromWif(string wif)
+        public void SetMasterFromPrivate(string privatekey)
         {
-            MasterKey = ExtKey.Parse(wif);
+            MasterKey = ExtKey.Parse(privatekey);
         }
         public HttpContent Get(string path)
         {
